@@ -9,5 +9,47 @@
 </head>
 <body>
 
+  <!-- <template id="template">
+    <article>
+
+      <h3 class="topicName"></h3>
+
+      <button class="deleteBtn">Delete</button>
+
+    </article>
+  </template> -->
+
+  <main>
+    <h1>Spaced Repitition Tracker App</h1>
+
+    <!-- Dropdown -->
+    <div>
+      <label for="usersDropdown">Select a user:</label>
+
+      <select id="usersDropdown">
+        <option selected disabled>Select one of the following users</option>
+      </select>
+    </div>
+
+    <!-- Container for displaying the topics -->
+    <div class="topicsContainer"></div>
+
+    <p class="message"></p>
+
+    <!-- Form -->
+    <form id="form">
+
+      <h2>Add a new topic:</h2>
+
+      <label for="topicInput">Topic name</label>
+      <input type="text" id="topicInput" required>
+  
+      <label for="revisionDateInput">Select a date</label>
+      <input type="date" id="revisionDateInput" required>
+  
+      <button type="submit" class="submitBtn">Submit</button>
+    </form>
+
+  </main>
 </body>
 </html>
