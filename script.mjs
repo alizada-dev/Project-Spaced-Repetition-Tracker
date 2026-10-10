@@ -5,7 +5,7 @@
 // You can't open the index.html file using a file:// URL.
 
 import { getUserIds } from "./common.mjs";
-import { getData, addData } from "./storage.mjs";
+import { getData, addData, clearData } from "./storage.mjs";
 
 const userSelect = document.querySelector("#usersDropdown");
 const topicsContainer = document.querySelector(".topicsContainer");
@@ -35,26 +35,31 @@ userSelect.addEventListener("change", (e) => {
   const userData = getData(currentUser) || [];
 
   if (userData.length === 0) {
+    topicsContainer.style.display = "none";
     msg.textContent = "Sorry, no topics to revise for the selected user.";
-  } else {
-    msg.textContent = "";
-    displayTopics();
+    return;
   }
+
+  msg.textContent = "";
+  topicsContainer.style.display = "block";
+  displayTopics();
+
 })
 
 // Display topics
 function displayTopics() {
   const topics = getData(currentUser) || [];
 
-  topics.forEach((topic) => {
-    topicsContainer.innerHTML += `
+  topicsContainer.innerHTML = `
+    <h2>Topics to be revised</h2>
+
+    ${topics.map((topic) => `
       <div>
         <h3>${topic.topicName}</h3>
         <p>${topic.revisionDate}</p>
       </div>
-     `
-  })
-
+    `).join("")}
+  `;
 }
 
 // Submit
@@ -62,21 +67,30 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (!currentUser) return;
   addTopic();
-})
+});
 
 // Add a topic
 function addTopic() {
-  const topics = getData(currentUser) || [];
+  if (!currentUser) return;
 
-  topics.push({
+  // const topics = getData(currentUser) || [];
+
+  // topics.push({
+  //   topicName: topicInput.value,
+  //   revisionDate: revisionDateInput.value
+  // });
+
+  const topic = {
     topicName: topicInput.value,
     revisionDate: revisionDateInput.value
-  });
+  }
 
-  addData(currentUser, topics);
+  addData(currentUser, topic);
 
   topicInput.value = "";
   revisionDateInput.value = "";
+
+  topicsContainer.style.display = "block";
 
   displayTopics();
   msg.textContent = "";
