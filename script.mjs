@@ -1,12 +1,8 @@
-// This is a placeholder file which shows how you can access functions defined in other files.
-// It can be loaded into index.html.
-// You can delete the contents of the file once you have understood how it works.
-// Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
-// You can't open the index.html file using a file:// URL.
 
 import { getUserIds } from "./common.mjs";
 import { getData, addData, clearData } from "./storage.mjs";
 
+// Declaring variables
 const userSelect = document.querySelector("#usersDropdown");
 const topicsContainer = document.querySelector(".topicsContainer");
 const topicInput = document.querySelector("#topicInput");
@@ -14,6 +10,7 @@ const revisionDateInput = document.querySelector("#revisionDateInput");
 const form = document.querySelector("#form");
 const msg = document.querySelector(".message");
 
+// Filling the dropdown
 function loadUsers() {
   const users = getUserIds();
 
@@ -43,49 +40,77 @@ userSelect.addEventListener("change", (e) => {
   msg.textContent = "";
   topicsContainer.style.display = "block";
   displayTopics();
+});
 
-})
-
-// Display topics
+// Displaying topics
 function displayTopics() {
   const topics = getData(currentUser) || [];
+
+  const currentDate = new Date();
+  // Getting yesterday's date
+  currentDate.setDate(currentDate.getDate() - 1);
+
+  const sortedTopics = topics.sort((a, b) => a.revision - b.revision).filter(x => x.revision >= currentDate);
+
+  const options = { day: "numeric", month: "short", year: "numeric" };
 
   topicsContainer.innerHTML = `
     <h2>Topics to be revised</h2>
 
-    ${topics.map((topic) => `
-      <div>
-        <h3>${topic.topicName}</h3>
-        <p>${topic.revisionDate}</p>
-      </div>
+    ${sortedTopics.map((topic) => `
+        <p>${topic.topicName}, ${new Date(topic.revision).toLocaleDateString("en-GB", options)}</p>
     `).join("")}
   `;
 }
 
-// Submit
+// Submitting the form
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (!currentUser) return;
   addTopic();
 });
 
-// Add a topic
+// Adding a topic
 function addTopic() {
   if (!currentUser) return;
 
-  // const topics = getData(currentUser) || [];
+  const chosenDate = new Date(revisionDateInput.value);
+  const newDate = new Date(chosenDate);
+  const newDate1 = new Date(chosenDate);
+  const newDate2 = new Date(chosenDate);
+  const newDate3 = new Date(chosenDate);
+  const newDate4 = new Date(chosenDate);
 
-  // topics.push({
-  //   topicName: topicInput.value,
-  //   revisionDate: revisionDateInput.value
-  // });
+  const oneWeekLater = newDate.setDate(newDate.getDate() + 7);
+  const oneMonthLater = newDate1.setMonth(newDate1.getMonth() + 1);
+  const threeMonthsLater = newDate2.setMonth(newDate2.getMonth() + 3);
+  const sixMonthsLater = newDate3.setMonth(newDate3.getMonth() + 6);
+  const oneYearLater = newDate4.setFullYear(newDate4.getFullYear() + 1);
 
-  const topic = {
-    topicName: topicInput.value,
-    revisionDate: revisionDateInput.value
-  }
+  const topics = [
+    {
+      topicName: topicInput.value,
+      revision: oneWeekLater,
+    },
+    {
+      topicName: topicInput.value,
+      revision: oneMonthLater
+    },
+    {
+      topicName: topicInput.value,
+      revision: threeMonthsLater
+    },
+    {
+      topicName: topicInput.value,
+      revision: sixMonthsLater
+    },
+    {
+      topicName: topicInput.value,
+      revision: oneYearLater
+    }
+  ]
 
-  addData(currentUser, topic);
+  addData(currentUser, topics);
 
   topicInput.value = "";
   revisionDateInput.value = "";
@@ -95,7 +120,6 @@ function addTopic() {
   displayTopics();
   msg.textContent = "";
 }
-
 
 window.onload = function () {
   loadUsers();
