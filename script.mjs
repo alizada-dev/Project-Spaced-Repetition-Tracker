@@ -1,6 +1,6 @@
 
 import { getUserIds } from "./common.mjs";
-import { getData, addData, clearData } from "./storage.mjs";
+import { getData, addData } from "./storage.mjs";
 
 // Declaring variables
 const userSelect = document.querySelector("#usersDropdown");
@@ -9,6 +9,7 @@ const topicInput = document.querySelector("#topicInput");
 const revisionDateInput = document.querySelector("#revisionDateInput");
 const form = document.querySelector("#form");
 const msg = document.querySelector(".message");
+const toast = document.getElementById("snackbar");
 
 // Filling the dropdown
 function loadUsers() {
@@ -47,10 +48,12 @@ function displayTopics() {
   const topics = getData(currentUser) || [];
 
   const currentDate = new Date();
-  // Getting yesterday's date
-  currentDate.setDate(currentDate.getDate() - 1);
+  // Setting today's time to midnight
+  currentDate.setHours(0, 0, 0, 0);
 
-  const sortedTopics = topics.sort((a, b) => a.revision - b.revision).filter(x => x.revision >= currentDate);
+  const sortedTopics = topics
+    .sort((a, b) => a.revisionDate - b.revisionDate)
+    .filter(x => x.revisionDate >= currentDate);
 
   const options = { day: "numeric", month: "short", year: "numeric" };
 
@@ -58,7 +61,7 @@ function displayTopics() {
     <h2>Topics to be revised</h2>
 
     ${sortedTopics.map((topic) => `
-        <p>${topic.topicName}, ${new Date(topic.revision).toLocaleDateString("en-GB", options)}</p>
+        <p>${topic.topicName}, ${new Date(topic.revisionDate).toLocaleDateString("en-GB", options)}</p>
     `).join("")}
   `;
 }
@@ -66,13 +69,15 @@ function displayTopics() {
 // Submitting the form
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (!currentUser) return;
   addTopic();
 });
 
 // Adding a topic
 function addTopic() {
-  if (!currentUser) return;
+  if (!currentUser) {
+    alert("Select a user first");
+    return;
+  }
 
   const chosenDate = new Date(revisionDateInput.value);
   const newDate = new Date(chosenDate);
@@ -90,32 +95,37 @@ function addTopic() {
   const topics = [
     {
       topicName: topicInput.value,
-      revision: oneWeekLater,
+      revisionDate: oneWeekLater,
     },
     {
       topicName: topicInput.value,
-      revision: oneMonthLater
+      revisionDate: oneMonthLater
     },
     {
       topicName: topicInput.value,
-      revision: threeMonthsLater
+      revisionDate: threeMonthsLater
     },
     {
       topicName: topicInput.value,
-      revision: sixMonthsLater
+      revisionDate: sixMonthsLater
     },
     {
       topicName: topicInput.value,
-      revision: oneYearLater
+      revisionDate: oneYearLater
     }
   ]
 
   addData(currentUser, topics);
 
   topicInput.value = "";
-  revisionDateInput.value = "";
+  revisionDateInput.value = new Date().toISOString().slice(0, 10);
 
   topicsContainer.style.display = "block";
+
+  toast.className = "show";
+  setTimeout(() => {
+    toast.className = toast.className.replace("show", "");
+  }, 3000);
 
   displayTopics();
   msg.textContent = "";
@@ -123,4 +133,5 @@ function addTopic() {
 
 window.onload = function () {
   loadUsers();
+  revisionDateInput.value = new Date().toISOString().slice(0, 10);
 };
