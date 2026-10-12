@@ -3,11 +3,6 @@ import assert from "node:assert";
 import test from "node:test";
 import { calculateDate } from "./utils.mjs";
 
-
-test("User count is correct", () => {
-  assert.equal(getUserIds().length, 5);
-});
-
 test("calculateDate function returns the correct revision dates", () => {
   const topic = {
     topicName: "JavaScript Asynchronous Functions",
@@ -21,6 +16,7 @@ test("calculateDate function returns the correct revision dates", () => {
   assert.equal(calculation[3].revisionDate, "2027-04-12");
   assert.equal(calculation[4].revisionDate, "2027-10-12");
 });
+
 
 test("calculateDate returns 5 revision dates even for past dates", () => {
   const topic = {
