@@ -1,6 +1,7 @@
 
 import { getUserIds } from "./common.mjs";
 import { getData, addData } from "./storage.mjs";
+import { calculateDate } from "./utils.mjs";
 
 // Declaring variables
 const userSelect = document.querySelector("#usersDropdown");
@@ -79,41 +80,7 @@ function addTopic() {
     return;
   }
 
-  const chosenDate = new Date(revisionDateInput.value);
-  const newDate = new Date(chosenDate);
-  const newDate1 = new Date(chosenDate);
-  const newDate2 = new Date(chosenDate);
-  const newDate3 = new Date(chosenDate);
-  const newDate4 = new Date(chosenDate);
-
-  const oneWeekLater = newDate.setDate(newDate.getDate() + 7);
-  const oneMonthLater = newDate1.setMonth(newDate1.getMonth() + 1);
-  const threeMonthsLater = newDate2.setMonth(newDate2.getMonth() + 3);
-  const sixMonthsLater = newDate3.setMonth(newDate3.getMonth() + 6);
-  const oneYearLater = newDate4.setFullYear(newDate4.getFullYear() + 1);
-
-  const topics = [
-    {
-      topicName: topicInput.value,
-      revisionDate: oneWeekLater,
-    },
-    {
-      topicName: topicInput.value,
-      revisionDate: oneMonthLater
-    },
-    {
-      topicName: topicInput.value,
-      revisionDate: threeMonthsLater
-    },
-    {
-      topicName: topicInput.value,
-      revisionDate: sixMonthsLater
-    },
-    {
-      topicName: topicInput.value,
-      revisionDate: oneYearLater
-    }
-  ]
+  const topics = calculateDate(topicInput.value, revisionDateInput.value);
 
   addData(currentUser, topics);
 
