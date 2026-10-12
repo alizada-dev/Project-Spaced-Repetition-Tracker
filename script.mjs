@@ -52,9 +52,11 @@ function displayTopics() {
   // Setting today's time to midnight
   currentDate.setHours(0, 0, 0, 0);
 
+  // Sorting topics by revision date and filtering out past dates
+  // new Date(a.revisionDate) creates a Date object from the revisionDate string.
   const sortedTopics = topics
-    .sort((a, b) => a.revisionDate - b.revisionDate)
-    .filter(x => x.revisionDate >= currentDate);
+    .sort((a, b) => new Date(a.revisionDate) - new Date(b.revisionDate))
+    .filter(x => new Date(x.revisionDate) >= new Date(currentDate));
 
   const options = { day: "numeric", month: "short", year: "numeric" };
 

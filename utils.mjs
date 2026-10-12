@@ -13,26 +13,30 @@ export function calculateDate(topicName, date) {
     const sixMonthsLater = newDate3.setMonth(newDate3.getMonth() + 6);
     const oneYearLater = newDate4.setFullYear(newDate4.getFullYear() + 1);
 
+    function formatDate(date) {
+        return new Date(date).toISOString().slice(0, 10);
+    }
+    
     const topics = [
         {
             topicName: topicName,
-            revisionDate: oneWeekLater,
+            revisionDate: formatDate(oneWeekLater)
         },
         {
             topicName: topicName,
-            revisionDate: oneMonthLater
+            revisionDate: formatDate(oneMonthLater)
         },
         {
             topicName: topicName,
-            revisionDate: threeMonthsLater
+            revisionDate: formatDate(threeMonthsLater)
         },
         {
             topicName: topicName,
-            revisionDate: sixMonthsLater
+            revisionDate: formatDate(sixMonthsLater)
         },
         {
             topicName: topicName,
-            revisionDate: oneYearLater
+            revisionDate: formatDate(oneYearLater)
         }
     ]
 
