@@ -1,9 +1,8 @@
-import { getUserIds } from "./common.mjs";
 import assert from "node:assert";
 import test from "node:test";
 import { calculateDate } from "./utils.mjs";
 
-test("calculateDate function returns the correct revision dates", () => {
+test("calculateDate returns the correct revision dates", () => {
   const topic = {
     topicName: "JavaScript Asynchronous Functions",
     chosenDate: "2026-10-12",
